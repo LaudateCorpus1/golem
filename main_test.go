@@ -5,10 +5,12 @@ import (
 	"compress/gzip"
 	"fmt"
 	"testing"
+	"github.com/bountylabs/golem/dicts"
+	"reflect"
 )
 
 func TestReadBinary(t *testing.T) {
-	b, err := Asset("data/en.gz")
+	b, err := dicts.Asset("data/en.gz")
 	if err != nil {
 		panic(err)
 	}
@@ -50,6 +52,31 @@ func TestLemmatizer_Lemma(t *testing.T) {
 		})
 	}
 }
+
+func TestLemmatizer_Lemmas(t *testing.T) {
+	l, _ := New("english")
+	tests := []struct {
+		in      string
+		out     []string
+		wantErr bool
+	}{
+		{"dog", nil, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.in, func(t *testing.T) {
+			got, err := l.Lemmas(tt.in)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Lemmatizer.Lemma() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tt.out) {
+				t.Errorf("Lemmatizer.Lemma() = %v, want %v", got, tt.out)
+			}
+		})
+	}
+}
+
 
 func BenchmarkNew(b *testing.B) {
 	for i := 0; i < b.N; i++ {

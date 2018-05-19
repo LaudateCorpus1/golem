@@ -48,7 +48,6 @@ func New(locale string) (*Lemmatizer, error) {
 			base := strings.ToLower(parts[0])
 			form := strings.ToLower(parts[1])
 			l.m[form] = append(l.m[form], base)
-			l.m[base] = append(l.m[base], base)
 		} else {
 			fmt.Println(line, "is odd")
 		}
