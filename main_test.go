@@ -17,6 +17,7 @@ func TestReadBinary(t *testing.T) {
 	_ = b
 	gzip.NewReader(bytes.NewBuffer(b))
 }
+
 func TestUsage(t *testing.T) {
 	l, err := New("english")
 	if err != nil {
@@ -28,15 +29,14 @@ func TestUsage(t *testing.T) {
 }
 
 func TestLemmatizer_Lemma(t *testing.T) {
-	l, _ := New("swedish")
+	l, _ := New("english")
 	tests := []struct {
 		in      string
 		out     string
 		wantErr bool
 	}{
-		{"Avtalet", "avtal", false},
-		{"avtalets", "avtal", false},
-		{"avtalens", "avtal", false},
+		{"submarines", "submarine", false},
+		{"Submarines", "submarine", false},
 		{"Avtaletsadlkj", "", true},
 	}
 	for _, tt := range tests {

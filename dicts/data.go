@@ -5,7 +5,7 @@
 // data/en.orig
 // DO NOT EDIT!
 
-package main
+package dicts
 
 import (
 	"fmt"
