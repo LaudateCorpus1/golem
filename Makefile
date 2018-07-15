@@ -3,32 +3,42 @@ default: download-all
 LANG=en
 download-all:
 	mkdir -p data
-	$(MAKE) en
-	$(MAKE) sv
-	$(MAKE) fr
-	$(MAKE) es
-	$(MAKE) de
-	rm data/*.zip	
+	$(MAKE) den
+	$(MAKE) dsv
+	$(MAKE) dfr
+	$(MAKE) des
+	$(MAKE) dde
+	rm data/*.zip
+	$(MAKE) build-bin
+
+build-bin:
 	go get -u github.com/jteeuwen/go-bindata/...
-	go-bindata -o data.go -nocompress data/
+	go-bindata -o dicts/data.go -nocompress data/
 
-en: LANG=en
-en: download
+en:
+	mkdir -p data
+	$(MAKE) den
+	rm data/*.zip
+	$(MAKE) build-bin
 
-sv: LANG=sv
-sv: download
+den: LANG=en
+den: download
 
-fr: LANG=fr
-fr: download
+dsv: LANG=sv
+dsv: download
 
-es: LANG=es
-es: download
+dfr: LANG=fr
+dfr: download
 
-de: LANG=de
-de: download
+des: LANG=es
+des: download
+
+dde: LANG=de
+dde: download
 
 download:
 	curl http://www.lexiconista.com/Datasets/lemmatization-$(LANG).zip > data/$(LANG).zip
 	unzip data/$(LANG).zip -d data
-	mv data/lemmatization-$(LANG).txt data/$(LANG)
+	mv data/lemmatization-$(LANG).txt data/$(LANG).orig
+	go run normalizer/normalizer.go --in data/$(LANG).orig --out data/$(LANG)
 	gzip data/$(LANG)
